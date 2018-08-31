@@ -1,32 +1,27 @@
+$(document).ready(function(){
 var intervalId;
-var time = 240;
+var time = 10;
 $("#start").on("click",run);
 
 function run() {
     clearInterval(intervalId);
     intervalId = setInterval(decrement, 1000);
+    setupOptions();
   }
 
 function decrement() {
-
     //  Decrease number by one.
     time--;
 
 $("#display").html("<h2>" + timeConverter(time) + "</h2>");
 
 if (time === 0) {
-
     //  ...run the stop function.
     stop();
     
-
     //  Alert the user that time is up.
     alert("Time Up!");
-    for (let n = 0; n < allQuestions.length; n++) {
-      checkAns(n);
-      $("#result").text("Total score:"+correctAnswers);
-      
-    }
+          checkAns(); 
   }
 }
 
@@ -39,27 +34,24 @@ function stop() {
   // time = 240;
   clearInterval(intervalId);
   $("#form").hide();
+  $("#start").hide();
+  $("#display").hide();
 }
 
-//  Execute the run function.
-// run();
 
 function timeConverter(t) {
 
     var minutes = Math.floor(t / 60);
     var seconds = t - (minutes * 60);
-    
         if (seconds < 10) {
        seconds = "0" + seconds;
       }
-    
         if (minutes === 0) {
          minutes = "00";
           }
-    else if (minutes < 10) {
-      minutes = "0" + minutes;
+        else if (minutes < 10) {
+        minutes = "0" + minutes;
      }
-    
     return minutes + ":" + seconds;
 }
     
@@ -95,38 +87,57 @@ var allQuestions = [{
 
 var correctAnswers = 0;
 
-function setupOptions(j) {
-  
+function setupOptions() {
+$("#form").empty();
+for (let j  = 0; j  < allQuestions.length; j++){
     
     $("#form").append( j+1 + ". " + allQuestions[j].question);
-  
-  // $("#question").append( j+1 + ". " + allQuestions[j].question);
-  // console.log(questionQuiz);
-  
-  var options = allQuestions[j].choices;
-  var formHtml = '';
-  for (var k = 0; k < options.length; k++) {
-    formHtml += '<div><input type="radio" name="option" value="' + k + '" id="option' + k + '"><label for="option' + k + '">' +
+    var options = allQuestions[j].choices;
+    var formHtml = '';
+    for (var k = 0; k < options.length; k++) {
+      formHtml += '<div><input type="radio" name="option' + j + '"value="' + k + '" id="option' + k + '"><label for="option' + k + '">' +
       allQuestions[j].choices[k] + '</label></div><br/>';
      
   }
-  var quiz=$('#form').append(formHtml);
+  $('#form').append(formHtml);
+}
+  var btn=$("<button id='submit'>Submit </button>");
+  $('#form').append(btn);
+  $("#form").show();
+  $("display").show();
   
   // $("#quesForm").append("#form");
   // $("#option0").prop('checked', true);
 
 };
-function checkAns(n) {
-  if ($("input[name=option]:checked").val() == allQuestions[n].correctAnswer) {
+function checkAns() {
+  for (let n = 0; n < allQuestions.length; n++) {
+    var userChoice = $("input[name=option" + n + "]:checked").val();
+    console.log(userChoice);
+   if (userChoice == allQuestions[n].correctAnswer) {
     correctAnswers++;
+   }
+   else if(userChoice != undefined){
+     incorrectAnswers++;
+   }
+   console.log(correctAnswers);
+    // var unanswered = allQuestions.length - correctAnswers - incorrectAnswers;
+    // $("#result").html("<p>Result: </p><p>Correct: " + correctAnswers + "</p><p>Incorrect: " + incorrectAnswers + "</p><p>Unanswered: " + unanswered + "</p><button id='reset'>Reset</button>");
+  }
+  var unanswered = allQuestions.length - correctAnswers - incorrectAnswers;
+    $("#result").html("<p>Result: </p><p>Correct: " + correctAnswers + "</p><p>Incorrect: " + incorrectAnswers + "</p><p>Unanswered: " + unanswered + "</p><button id='reset'>Reset</button>");
+$("#result").show();
   };
-};
 
+  $(document).on("click", "#submit", function(){
+    event.preventDefault();
+    stop();
+    checkAns();
+  });
+});
+  
+  
+  
 
-  
-for (let i  = 0; i  < allQuestions.length; i ++) {
-  setupOptions(i);
-  
-}
   
 
