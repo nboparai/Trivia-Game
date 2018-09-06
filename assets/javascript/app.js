@@ -1,6 +1,9 @@
 $(document).ready(function(){
 var intervalId;
-var time = 10;
+var time = 120;
+var correctAnswers = 0;
+var incorrectAnswers=0;
+var unanswered=0;
 $("#start").on("click",run);
 
 function run() {
@@ -85,7 +88,7 @@ var allQuestions = [{
   correctAnswer: 1
 }];
 
-var correctAnswers = 0;
+
 
 function setupOptions() {
 $("#form").empty();
@@ -106,9 +109,6 @@ for (let j  = 0; j  < allQuestions.length; j++){
   $("#form").show();
   $("display").show();
   
-  // $("#quesForm").append("#form");
-  // $("#option0").prop('checked', true);
-
 };
 function checkAns() {
   for (let n = 0; n < allQuestions.length; n++) {
@@ -121,11 +121,10 @@ function checkAns() {
      incorrectAnswers++;
    }
    console.log(correctAnswers);
-    // var unanswered = allQuestions.length - correctAnswers - incorrectAnswers;
-    // $("#result").html("<p>Result: </p><p>Correct: " + correctAnswers + "</p><p>Incorrect: " + incorrectAnswers + "</p><p>Unanswered: " + unanswered + "</p><button id='reset'>Reset</button>");
+    
   }
-  var unanswered = allQuestions.length - correctAnswers - incorrectAnswers;
-    $("#result").html("<p>Result: </p><p>Correct: " + correctAnswers + "</p><p>Incorrect: " + incorrectAnswers + "</p><p>Unanswered: " + unanswered + "</p><button id='reset'>Reset</button>");
+   unanswered = allQuestions.length - correctAnswers - incorrectAnswers;
+    $("#result").html("<p>Result: </p><p>Correct: " + correctAnswers + "</p><p>Incorrect: " + incorrectAnswers + "</p><p>Unanswered: " + unanswered + "</p><button id='reset' class='btn btn-primary btn-lg'>Reset</button>");
 $("#result").show();
   };
 
@@ -134,6 +133,15 @@ $("#result").show();
     stop();
     checkAns();
   });
+
+  $(document).on("click", "#reset", function(){
+    time=10;
+    correctAnswers = 0;
+    incorrectAnswers=0;
+    $("#result").hide();
+    $("#start").show();
+  });
+
 });
   
   
